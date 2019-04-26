@@ -1,7 +1,7 @@
 import logging
 import math
 
-import slidingwindow as sw
+import tf_pose.slidingwindow as sw
 
 import cv2
 import numpy as np
