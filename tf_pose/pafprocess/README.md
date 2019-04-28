@@ -1,14 +1,8 @@
 # post-processing for Part-Affinity Fields Map implemented in C++ & Swig
 
-Need to install swig.
+需要先安装C++编译器与swig，然后执行以下代码进行编译
 
 ```bash
-$ sudo apt install swig
-```
-
-You need to build pafprocess module which is written in c++. It will be used for post processing.
-
-```bash
-$ swig -python -c++ pafprocess.i && python3 setup.py build_ext --inplace
+$ swig -python -c++ pafprocess.i && python setup.py build_ext --inplace
 ```
 
