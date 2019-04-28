@@ -22,8 +22,10 @@ fps_time = 0
 if __name__ == '__main__':
     # 参数分析
     parser = argparse.ArgumentParser(description='tf-pose-estimation Video')
-    parser.add_argument('--video', type=str, default='ikun.mp4')
+    parser.add_argument('--video', type=str, default='')
     parser.add_argument('--resolution', type=str, default='432x368', help='network input resolution. default=432x368')
+    parser.add_argument('--resize-out-ratio', type=float, default=4.0,
+                        help='if provided, resize heatmaps before they are post-processed. default=4.0')
     parser.add_argument('--model', type=str, default='cmu', help='cmu / mobilenet_thin / mobilenet_v2_large / mobilenet_v2_small')
     parser.add_argument('--show-process', type=bool, default=False,
                         help='for debug purpose, if enabled, speed for inference is dropped.')
@@ -36,17 +38,19 @@ if __name__ == '__main__':
     e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
 
     # 捕捉视频
-    cap = cv2.VideoCapture(args.video)
+    video = cv2.VideoCapture(args.video)
 
     # 无法打开视频
-    if cap.isOpened() is False:
+    if video.isOpened() is False:
         print("Error opening video stream or file")
 
     # 视频结束前持续捕捉
-    while cap.isOpened():
-        ret_val, image = cap.read()
+    while video.isOpened():
+        ret_val, image = video.read()
 
-        humans = e.inference(image)
+        humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+        logger.debug(humans)
+
         if not args.showBG:
             image = np.zeros(image.shape)
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
