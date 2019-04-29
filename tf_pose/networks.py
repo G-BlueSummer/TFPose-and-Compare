@@ -9,7 +9,7 @@ from tf_pose.network_mobilenet_thin import MobilenetNetworkThin
 from tf_pose.network_cmu import CmuNetwork
 from tf_pose.network_mobilenet_v2 import Mobilenetv2Network
 
-
+# 获得基础目录
 def _get_base_path():
     if not os.environ.get('OPENPOSE_MODEL', ''):
         return './models'
@@ -150,7 +150,7 @@ def get_graph_path(model_name):
 
     raise Exception('Graph file doesn\'t exist, path=%s' % graph_path)
 
-
+# 解析长宽
 def model_wh(resolution_str):
     width, height = map(int, resolution_str.split('x'))
     if width % 16 != 0 or height % 16 != 0:
