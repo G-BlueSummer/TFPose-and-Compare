@@ -23,8 +23,8 @@ if __name__ == '__main__':
     # 参数分析
     parser = argparse.ArgumentParser(description='tf-pose-estimation realtime video')
     parser.add_argument('--video', default=0, help="the source of video, default is camera")
-    parser.add_argument('--resize', type=str, default='0x0',
-                        help='if provided, resize images before they are processed. default=0x0, Recommends : 432x368 or 656x368 or 1312x736 ')
+    parser.add_argument('--resize', type=str, default='432x368',
+                        help='if provided, resize images before they are processed. default=432x368, Recommends : 432x368 or 656x368 or 1312x736 ')
     parser.add_argument('--resize-out-ratio', type=float, default=4.0,
                         help='if provided, resize heatmaps before they are post-processed. default=4.0')
     parser.add_argument('--model', type=str, default='cmu', help='cmu / mobilenet_thin / mobilenet_v2_large / mobilenet_v2_small')
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     video = cv2.VideoCapture(args.video)
     ret_val, image = video.read()
 
-    while video.isOpened:
+    while video.isOpened():
         ret_val, image = video.read()
         # 视频读取结束
         if not ret_val:
