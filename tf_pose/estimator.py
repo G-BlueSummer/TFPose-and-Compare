@@ -16,7 +16,8 @@ try:
     from tf_pose.pafprocess import pafprocess
 except ModuleNotFoundError as e:
     print(e)
-    print('you need to build c++ library for pafprocess. See : https://github.com/ildoonet/tf-pose-estimation/tree/master/tf_pose/pafprocess')
+    print('you need to build c++ library for pafprocess. See : https://github.com/human-motion-detection/tf-pose-estimation/tree/master/tf_pose/pafprocess')
+    print('Run "swig -python -c++ pafprocess.i && python setup.py build_ext --inplace"')
     exit(-1)
 
 logger = logging.getLogger('TfPoseEstimator')
