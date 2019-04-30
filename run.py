@@ -28,8 +28,6 @@ if __name__ == '__main__':
     parser.add_argument('--resize-out-ratio', type=float, default=4.0,
                         help='if provided, resize heatmaps before they are post-processed. default=4.0')
     parser.add_argument('--model', type=str, default='cmu', help='cmu / mobilenet_thin / mobilenet_v2_large / mobilenet_v2_small')
-    parser.add_argument('--show-process', type=bool, default=False,
-                        help='for debug purpose, if enabled, speed for inference is dropped.')
     parser.add_argument('--showBG', type=bool, default=True, help='False to show skeleton only.')
     args = parser.parse_args()
 
@@ -41,7 +39,6 @@ if __name__ == '__main__':
 
     # 捕捉视频
     video = cv2.VideoCapture(args.video)
-    ret_val, image = video.read()
 
     while video.isOpened():
         ret_val, image = video.read()
@@ -49,12 +46,14 @@ if __name__ == '__main__':
         if not ret_val:
             break
 
+        # 识别骨骼
         humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
             
         logger.debug(humans)
 
         if not args.showBG:
             image = np.zeros(image.shape)
+        # 绘制骨骼
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
         # 输出FPS

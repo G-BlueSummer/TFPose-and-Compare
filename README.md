@@ -14,12 +14,6 @@ Original Repo(Caffe) : https://github.com/CMU-Perceptual-Computing-Lab/openpose
 
 Implemented features are listed here : [features](./etcs/feature.md)
 
-## Important Updates
-
-- 2019.3.12 Add new models using mobilenet-v2 architecture. See : [experiments.md](./etcs/experiments.md)
-- 2018.5.21 Post-processing part is implemented in c++. It is required compiling the part. See: https://github.com/ildoonet/tf-pose-estimation/tree/master/src/pafprocess
-- 2018.2.7 Arguments in run.py script changed. Support dynamic input size.
-
 ## Install
 
 ### Dependencies
@@ -38,12 +32,12 @@ You need dependencies below.
 Clone the repo and install 3rd-party libraries.
 
 ```bash
-$ git clone https://www.github.com/ildoonet/tf-pose-estimation
+$ git clone https://github.com/human-motion-detection/tf-pose-estimation
 $ cd tf-pose-estimation
 $ pip3 install -r requirements.txt
 ```
 
-Build c++ library for post processing. See : https://github.com/ildoonet/tf-pose-estimation/tree/master/tf_pose/pafprocess
+Build c++ library for post processing. See : https://github.com/human-motion-detection/tf-pose-estimation/tree/master/tf_pose/pafprocess
 ```
 $ cd tf_pose/pafprocess
 $ swig -python -c++ pafprocess.i && python3 setup.py build_ext --inplace
@@ -86,7 +80,7 @@ $ bash download.sh
 You can test the inference feature with a single image.
 
 ```
-$ python run.py --model=mobilenet_thin --resize=432x368 --image=./images/p1.jpg
+$ python run_img.py --model=mobilenet_thin --resize=432x368 --image=./images/p1.jpg
 ```
 
 The image flag MUST be relative to the src folder with no "~", i.e:
@@ -101,7 +95,7 @@ Then you will see the screen as below with pafmap, heatmap, result and etc.
 ### Realtime Webcam
 
 ```
-$ python run_webcam.py --model=mobilenet_thin --resize=432x368 --camera=0
+$ python run.py --model=mobilenet_thin --resize=432x368 --camera=0
 ```
 
 Then you will see the realtime webcam screen with estimated poses as below. This [Realtime Result](./etcs/openpose_macbook13_mobilenet2.gif) was recored on macbook pro 13" with 3.1Ghz Dual-Core CPU.
