@@ -3,7 +3,6 @@ import logging
 import sys
 import time
 
-from tf_pose import common
 import cv2
 import numpy as np
 from tf_pose.estimator import TfPoseEstimator
@@ -34,8 +33,8 @@ if __name__ == '__main__':
     w, h = model_wh(args.resize)
     e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))
 
-    # estimate human poses from a single image !
-    image = common.read_imgfile(args.image, None, None)
+    # 读取单张图像进行识别
+    image = cv2.imread(args.image)
     if image is None:
         logger.error('Image can not be read, path=%s' % args.image)
         sys.exit(-1)

@@ -86,7 +86,7 @@ class MPIIPart(Enum):
 
         pose_2d_mpii = []
         visibilty = []
-        for mpi, coco in t:
+        for _, coco in t:
             if coco.value not in human.body_parts.keys():
                 pose_2d_mpii.append((0, 0))
                 visibilty.append(False)
