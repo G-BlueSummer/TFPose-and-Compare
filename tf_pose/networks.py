@@ -1,5 +1,5 @@
 import os
-from os.path import dirname, abspath
+from os.path import dirname, abspath, join
 
 import tensorflow as tf
 
@@ -19,79 +19,79 @@ def _get_base_path():
 def get_network(type, placeholder_input, sess_for_load=None, trainable=True):
     if type == 'mobilenet':
         net = MobilenetNetwork({'image': placeholder_input}, conv_width=0.75, conv_width2=1.00, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v1_0.75_224_2017_06_14/mobilenet_v1_0.75_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v1_0.75_224_2017_06_14', 'mobilenet_v1_0.75_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_fast':
         net = MobilenetNetwork({'image': placeholder_input}, conv_width=0.5, conv_width2=0.5, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v1_0.75_224_2017_06_14/mobilenet_v1_0.75_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v1_0.75_224_2017_06_14', 'mobilenet_v1_0.75_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_accurate':
         net = MobilenetNetwork({'image': placeholder_input}, conv_width=1.00, conv_width2=1.00, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v1_1.0_224_2017_06_14/mobilenet_v1_1.0_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v1_1.0_224_2017_06_14', 'mobilenet_v1_1.0_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
 
     elif type == 'mobilenet_thin':
         net = MobilenetNetworkThin({'image': placeholder_input}, conv_width=0.75, conv_width2=0.50, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v1_0.75_224_2017_06_14/mobilenet_v1_0.75_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v1_0.75_224_2017_06_14', 'mobilenet_v1_0.75_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
 
     elif type in ['mobilenet_v2_w1.4_r1.0', 'mobilenet_v2_large', 'mobilenet_v2_large_quantize']:       # m_v2_large
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=1.4, conv_width2=1.0, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_1.4_224/mobilenet_v2_1.4_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_1.4_224', 'mobilenet_v2_1.4_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_w1.4_r0.5':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=1.4, conv_width2=0.5, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_1.4_224/mobilenet_v2_1.4_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_1.4_224', 'mobilenet_v2_1.4_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_w1.0_r1.0':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=1.0, conv_width2=1.0, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_1.0_224/mobilenet_v2_1.0_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_1.0_224', 'mobilenet_v2_1.0_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_w1.0_r0.75':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=1.0, conv_width2=0.75, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_1.0_224/mobilenet_v2_1.0_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_1.0_224', 'mobilenet_v2_1.0_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_w1.0_r0.5':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=1.0, conv_width2=0.5, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_1.0_224/mobilenet_v2_1.0_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_1.0_224', 'mobilenet_v2_1.0_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_w0.75_r0.75':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=0.75, conv_width2=0.75, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_0.75_224/mobilenet_v2_0.75_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_0.75_224', 'mobilenet_v2_0.75_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_w0.5_r0.5' or type == 'mobilenet_v2_small':                                # m_v2_fast
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=0.5, conv_width2=0.5, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_0.5_224/mobilenet_v2_0.5_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_0.5_224', 'mobilenet_v2_0.5_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
 
     elif type == 'mobilenet_v2_1.4':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=1.4, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_1.4_224/mobilenet_v2_1.4_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_1.4_224', 'mobilenet_v2_1.4_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_1.0':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=1.0, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_1.0_224/mobilenet_v2_1.0_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_1.0_224', 'mobilenet_v2_1.0_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_0.75':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=0.75, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_0.75_224/mobilenet_v2_0.75_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_0.75_224', 'mobilenet_v2_0.75_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
     elif type == 'mobilenet_v2_0.5':
         net = Mobilenetv2Network({'image': placeholder_input}, conv_width=0.5, trainable=trainable)
-        pretrain_path = 'pretrained/mobilenet_v2_0.5_224/mobilenet_v2_0.5_224.ckpt'
+        pretrain_path = join('pretrained', 'mobilenet_v2_0.5_224', 'mobilenet_v2_0.5_224.ckpt')
         last_layer = 'MConv_Stage6_L{aux}_5'
 
     elif type in ['cmu', 'openpose']:
         net = CmuNetwork({'image': placeholder_input}, trainable=trainable)
-        pretrain_path = 'numpy/openpose_coco.npy'
+        pretrain_path = join('numpy', 'openpose_coco.npy')
         last_layer = 'Mconv7_stage6_L{aux}'
     elif type in ['cmu_quantize', 'openpose_quantize']:
         net = CmuNetwork({'image': placeholder_input}, trainable=trainable)
-        pretrain_path = 'train/cmu/bs8_lr0.0001_q_e80/model_latest-18000'
+        pretrain_path = join('train', 'cmu', 'bs8_lr0.0001_q_e80', 'model_latest-18000')
         last_layer = 'Mconv7_stage6_L{aux}'
     elif type == 'vgg':
         net = CmuNetwork({'image': placeholder_input}, trainable=trainable)
-        pretrain_path = 'numpy/openpose_vgg16.npy'
+        pretrain_path = join('numpy', 'openpose_vgg16.npy')
         last_layer = 'Mconv7_stage6_L{aux}'
 
     else:
@@ -109,13 +109,13 @@ def get_network(type, placeholder_input, sess_for_load=None, trainable=True):
             except:
                 s = ''
             ckpts = {
-                'mobilenet': 'trained/mobilenet_%s/model-246038' % s,
-                'mobilenet_thin': 'trained/mobilenet_thin_%s/model-449003' % s,
-                'mobilenet_fast': 'trained/mobilenet_fast_%s/model-189000' % s,
-                'mobilenet_accurate': 'trained/mobilenet_accurate/model-170000',
-                'mobilenet_v2_w1.4_r0.5': 'trained/mobilenet_v2_w1.4_r0.5/model_latest-380401',
-                'mobilenet_v2_large': 'trained/mobilenet_v2_w1.4_r1.0/model-570000',
-                'mobilenet_v2_small': 'trained/mobilenet_v2_w0.5_r0.5/model_latest-380401',
+                'mobilenet': join('trained', 'mobilenet_%s', 'model-246038') % s,
+                'mobilenet_thin': join('trained', 'mobilenet_thin_%s', 'model-449003') % s,
+                'mobilenet_fast': join('trained', 'mobilenet_fast_%s', 'model-189000') % s,
+                'mobilenet_accurate': join('trained', 'mobilenet_accurate', 'model-170000'),
+                'mobilenet_v2_w1.4_r0.5': join('trained', 'mobilenet_v2_w1.4_r0.5', 'model_latest-380401'),
+                'mobilenet_v2_large': join('trained', 'mobilenet_v2_w1.4_r1.0', 'model-570000'),
+                'mobilenet_v2_small': join('trained', 'mobilenet_v2_w0.5_r0.5', 'model_latest-380401'),
             }
             ckpt_path = os.path.join(_get_base_path(), ckpts[type])
             loader = tf.train.Saver()
@@ -129,22 +129,20 @@ def get_network(type, placeholder_input, sess_for_load=None, trainable=True):
 
 def get_graph_path(model_name):
     dyn_graph_path = {
-        'cmu': 'graph/cmu/graph_opt.pb',
-        'openpose_quantize': 'graph/cmu/graph_opt_q.pb',
-        'mobilenet_thin': 'graph/mobilenet_thin/graph_opt.pb',
-        'mobilenet_v2_large': 'graph/mobilenet_v2_large/graph_opt.pb',
-        'mobilenet_v2_large_r0.5': 'graph/mobilenet_v2_large/graph_r0.5_opt.pb',
-        'mobilenet_v2_large_quantize': 'graph/mobilenet_v2_large/graph_opt_q.pb',
-        'mobilenet_v2_small': 'graph/mobilenet_v2_small/graph_opt.pb',
+        'cmu': join('graph', 'cmu', 'graph_opt.pb'),
+        'openpose_quantize': join('graph', 'cmu', 'graph_opt_q.pb'),
+        'mobilenet_thin': join('graph', 'mobilenet_thin', 'graph_opt.pb'),
+        'mobilenet_v2_large': join('graph', 'mobilenet_v2_large', 'graph_opt.pb'),
+        'mobilenet_v2_small': join('graph', 'mobilenet_v2_small', 'graph_opt.pb'),
     }
 
     base_data_dir = dirname(dirname(abspath(__file__)))
-    if os.path.exists(os.path.join(base_data_dir, 'models')):
-        base_data_dir = os.path.join(base_data_dir, 'models')
+    if os.path.exists(join(base_data_dir, 'models')):
+        base_data_dir = join(base_data_dir, 'models')
     else:
-        base_data_dir = os.path.join(base_data_dir, 'tf_pose_data')
+        base_data_dir = join(base_data_dir, 'tf_pose_data')
 
-    graph_path = os.path.join(base_data_dir, dyn_graph_path[model_name])
+    graph_path = join(base_data_dir, dyn_graph_path[model_name])
     if os.path.isfile(graph_path):
         return graph_path
 
