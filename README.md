@@ -14,11 +14,11 @@ Original Repo(Caffe) : https://github.com/CMU-Perceptual-Computing-Lab/openpose
 
 Implemented features are listed here : [features](./etcs/feature.md)
 
-## Install
+## 安装
 
-### Dependencies
+### 依赖
 
-You need dependencies below.
+需要安装以下依赖
 
 - python3
 - tensorflow 1.4.1+
@@ -27,7 +27,7 @@ You need dependencies below.
   - https://github.com/adamrehn/slidingwindow
   - I copied from the above git repo to modify few things.
 
-### Install
+### 安装
 
 Clone the repo and install 3rd-party libraries.
 
@@ -73,7 +73,7 @@ $ cd models/graph/cmu
 $ bash download.sh
 ```
 
-## Demo
+## 示例
 
 ### Test Inference
 
@@ -100,11 +100,11 @@ $ python run.py --model=mobilenet_thin --resize=432x368 --camera=0
 
 Then you will see the realtime webcam screen with estimated poses as below. This [Realtime Result](./etcs/openpose_macbook13_mobilenet2.gif) was recored on macbook pro 13" with 3.1Ghz Dual-Core CPU.
 
-## Python Usage
+## Python用法
 
 This pose estimator provides simple python classes that you can use in your applications.
 
-See [run.py](run.py) or [run_webcam.py](run_webcam.py) as references.
+See [run.py](run.py) or [run_img.py](run_img.py) as references.
 
 ```python
 e = TfPoseEstimator(get_graph_path(args.model), target_size=(w, h))

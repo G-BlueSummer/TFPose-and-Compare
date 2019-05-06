@@ -31,7 +31,7 @@ REQUIRED_PACKAGES = [
 ]
 
 DEPENDENCY_LINKS = [
-    'git+https://github.com/ppwwyyxx/tensorpack.git#egg=tensorpack',
+    'git+https://github.com/tensorpack/tensorpack#egg=tensorpack'
 ]
 
 EXT = Extension('_pafprocess',
@@ -49,7 +49,7 @@ setuptools.setup(
     'Deep Pose Estimation implemented using Tensorflow with Custom Architectures for fast inference.',
     install_requires=REQUIRED_PACKAGES,
     dependency_links=DEPENDENCY_LINKS,
-    url='https://github.com/ildoonet/tf-pose-estimation/',
+    url='https://github.com/human-motion-detection/tf-pose-estimation',
     author='Ildoo Kim',
     author_email='ildoo@ildoo.net',
     license='Apache License 2.0',
