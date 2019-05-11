@@ -11,10 +11,10 @@ import numpy as np
 import tensorflow as tf
 from tqdm import tqdm
 
-from pose_dataset import get_dataflow_batch, DataFlowToQueue, CocoPose
-from pose_augment import set_network_input_wh, set_network_scale
-from common import get_sample_images
-from networks import get_network
+from tf_pose.pose_dataset import get_dataflow_batch, DataFlowToQueue, CocoPose
+from tf_pose.pose_augment import set_network_input_wh, set_network_scale
+from tf_pose.common import get_sample_images
+from tf_pose.networks import get_network
 
 logger = logging.getLogger('train')
 logger.handlers.clear()
