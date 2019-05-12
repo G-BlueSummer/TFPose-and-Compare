@@ -1,5 +1,7 @@
 import numpy as np
 import threading
+import os
+from os.path import join
 
 class threadsafe_iterator:
     def __init__(self, iterator):
@@ -38,8 +40,19 @@ class DataSet():
             
             yield np.array(X), np.array(y)
             
-    def get_classes():
-        pass
+    def get_classes(self):
+        classes = []
+        # 类别名按目录放置
+        for dir in os.listdir('video'):
+            classes.append(dir)
 
-    def get_data():
-        pass
+        return classes
+
+    def get_data(self):
+        data = []
+
+        for dir in self.get_classes():
+            for video in os.listdir(join('video', dir)):
+                data.append((join('video', dir, video), dir))
+
+        return data

@@ -1,49 +1,40 @@
-from keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping, CSVLogger
+from keras.callbacks import ModelCheckpoint, EarlyStopping
 from os.path import join
 from lstm.model import LSTM_Model
 from lstm.data import DataSet
 import time
 
-def train(seq_length, batch_size=32, nb_epoch=100):
+def train_models(train_data,train_labels,validation_data,validation_labels):
     # 模型保存
-    checkPointer = ModelCheckpoint(
-        filepath='model.hdf5',
-        verbose=1,
-        save_best_only=True
-    )
 
-    tb = TensorBoard(log_dir=join('logs, model'))
+    batch_size = 128
+    nb_epoch = 500
 
-    early_stopper = EarlyStopping(patience=5)
+    callback = [
+        EarlyStopping(monitor='val_loss', patience=10, verbose=0),
+        ModelCheckpoint(
+            filepath='LSTM.h5',
+            monitor='val_loss',
+            verbose=0,
+            save_best_only=True
+            )
+        ]
 
-    timestamp = time.time()
-    csv_logger = CSVLogger(join('logs', str(timestamp) + '.log'))
+    lstm = LSTM_Model(train_data.shape[1], train_data.shape[2])
 
-    #导入数据集
-    data = DataSet(seq_length)
-
-    steps_per_epoch = (len(data.data) * 0.7)
-
-    #导入生成器
-    generator = data.frame_generator(batch_size, 'train')
-    val_generator = data.frame_generator(batch_size, 'test')
-
-    lstm = LSTM_Model(len(data.classes), seq_length)
-    #使用生成器训练
-    lstm.model.fit_generator(
-            generator=generator,
-            steps_per_epoch=steps_per_epoch,
+    lstm.model.fit(
+            train_data,
+            train_labels,
+            validation_data=(validation_data, validation_labels),
+            batch_size=batch_size,
+            nb_epoch=nb_epoch,
             epochs=nb_epoch,
             verbose=1,
-            callbacks=[tb, early_stopper, csv_logger, checkPointer],
-            validation_data=val_generator,
-            validation_steps=40,
-            workers=4)
+            callbacks=callback
+            )
     
-
 def main():
-    seq_length = 40
-    train(seq_length)
+    pass
 
 if __name__ == '__main__':
     main()

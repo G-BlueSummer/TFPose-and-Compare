@@ -1,11 +1,11 @@
 from keras.layers import Dense, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
-from keras.optimizers import Adam
+from keras.optimizers import SGD
 
 
 class LSTM_Model():
-    def __init__(self, n_classes, seq_length, features_length=2048):
+    def __init__(self, seq_length, features_length, n_classes=5):
         self.model = self.lstm()
         self.input_shape = (seq_length, features_length)    #输入的特征形状
         self.n_classes = n_classes                          #分类的类别数
@@ -14,13 +14,11 @@ class LSTM_Model():
         if self.n_classes >= 10:
             metrics.append('top_k_categorical_accuracy')
 
-        optimizer = Adam(lr=1e-5, decay=1e-6)
+        optimizer = SGD(lr=0.00005, decay = 1e-6, momentum=0.9, nesterov=True)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer,
                            metrics=metrics)
 
         print(self.model.summary())
-
-        pass
 
     def lstm(self):
         model = Sequential()
