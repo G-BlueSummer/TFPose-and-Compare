@@ -9,7 +9,7 @@ class DataSet():
     def __init__(self):
         self.max_frames = 8
         self.resize = '432x368'
-        self.model = 'cmu'
+        self.model = 'mobilenet_thin'
         self.estimator = self.load_tf_pose()
 
     #加载骨架识别的模型
@@ -20,15 +20,16 @@ class DataSet():
     #生成一个视频文件的特征
     def extract_video_features(self, video_input_file_path, feature_output_file_path=None):
         video = cv2.VideoCapture(video_input_file_path)
-        features= []
+        features = []
         while video.isOpened():
             ret_val, image = video.read()
             # 视频读取结束
             if not ret_val:
                 break
 
-            feature = TfPoseEstimator.trans_data(self.estimator.inference(image, upsample_size=5.0))
+            feature = TfPoseEstimator.trans_data(self.estimator.inference(image, upsample_size=5.0))[0]     #只提取第一个人
             features.append(feature)
+
         unscaled_features = np.array(features)
         if feature_output_file_path:
             np.save(feature_output_file_path, unscaled_features)    #保存到文件
@@ -60,8 +61,9 @@ class DataSet():
             for file in os.listdir(join('video', c)):
                 video_path = join('video', c, file)
                 if save_data:
-                    output_feature_file_path = join('features' ,file.split('.')[-2] + '.npy')
+                    output_feature_file_path = join('features' ,file.split('.')[0] + '.npy')
                 X = self.extract_video_features(video_path, output_feature_file_path)
+                print(X)
                 y = c
                 X_samples.append(X)
                 y_samples.append(y)

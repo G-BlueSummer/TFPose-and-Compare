@@ -395,12 +395,13 @@ class TfPoseEstimator:
         #转换为特征向量
         n_humans = []
         for human in humans:
-            # draw point
+            n_human = []
             for i in range(common.CocoPart.Background.value):
                 if i not in human.body_parts.keys():
-                    n_humans.extend([0, 0, 0])
+                    n_human.extend([0, 0, 0])
                 else:
-                    n_humans.extend(human.body_parts[i].to_array()) 
+                    n_human.extend(human.body_parts[i].to_array()) 
+            n_humans.append(n_human)
 
         return np.array(n_humans)
 
