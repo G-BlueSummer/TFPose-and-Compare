@@ -265,6 +265,8 @@ class BodyPart:
     def __repr__(self):
         return self.__str__()
 
+    def to_array(self):
+        return np.array([self.x, self.y, self.score])
 
 class PoseEstimator:
     def __init__(self):
@@ -276,12 +278,26 @@ class PoseEstimator:
 
         humans = []
         for human_id in range(pafprocess.get_num_humans()):
-           
-            human = []
+            human = Human([])
+            is_added = False
+
             for part_idx in range(18):
                 c_idx = int(pafprocess.get_part_cid(human_id, part_idx))
-                human.append(c_idx)
-            humans.append(human)
+                if c_idx < 0:
+                    continue
+
+                is_added = True
+                human.body_parts[part_idx] = BodyPart(
+                    '%d-%d' % (human_id, part_idx), part_idx,
+                    float(pafprocess.get_part_x(c_idx)) / heat_mat.shape[1],
+                    float(pafprocess.get_part_y(c_idx)) / heat_mat.shape[0],
+                    pafprocess.get_part_score(c_idx)
+                )
+
+            if is_added:
+                score = pafprocess.get_score(human_id)
+                human.score = score
+                humans.append(human)
 
         return humans
 
@@ -374,50 +390,28 @@ class TfPoseEstimator:
         npimg_q = npimg_q.astype(np.uint8)
         return npimg_q
 
-    
-    # 将数字转化为可绘制的点
     @staticmethod
-    def trans_humans(n_humans, heat_mat):
+    def trans_data(humans):
+        #转换为特征向量
+        n_humans = []
+        for human in humans:
+            # draw point
+            for i in range(common.CocoPart.Background.value):
+                if i not in human.body_parts.keys():
+                    n_humans.extend([0, 0, 0])
+                else:
+                    n_humans.extend(human.body_parts[i].to_array()) 
 
-        humans = []
-
-        for human_id, n_human in enumerate(n_humans):
-            human = Human([])
-            is_added = False
-
-            for part_idx in range(18):
-                c_idx = n_human[part_idx]
-
-                #未识别到该肢体
-                if c_idx < 0:
-                    continue
-
-                is_added = True
-                human.body_parts[part_idx] = BodyPart(
-                    '%d-%d' % (human_id, part_idx), part_idx,
-                    float(pafprocess.get_part_x(c_idx)) / heat_mat.shape[1],
-                    float(pafprocess.get_part_y(c_idx)) / heat_mat.shape[0],
-                    pafprocess.get_part_score(c_idx)
-                )
-
-            if is_added:
-                score = pafprocess.get_score(human_id)
-                human.score = score
-                humans.append(human)
-        return humans
+        return np.array(n_humans)
 
     @staticmethod
-    def draw_humans(npimg, humans, heatMat, imgcopy=False):
+    def draw_humans(npimg, humans, imgcopy=False):
         if imgcopy:
             npimg = np.copy(npimg)
         image_h, image_w = npimg.shape[:2]
         centers = {}
-
-        #先转化再绘制
-        humans = TfPoseEstimator.trans_humans(humans, heatMat)
-
         for human in humans:
-            # 画点
+            # draw point
             for i in range(common.CocoPart.Background.value):
                 if i not in human.body_parts.keys():
                     continue
@@ -427,11 +421,12 @@ class TfPoseEstimator:
                 centers[i] = center
                 cv2.circle(npimg, center, 3, common.CocoColors[i], thickness=3, lineType=8, shift=0)
 
-            # 画线
+            # draw line
             for pair_order, pair in enumerate(common.CocoPairsRender):
                 if pair[0] not in human.body_parts.keys() or pair[1] not in human.body_parts.keys():
                     continue
 
+                # npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
                 cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
 
         return npimg
@@ -568,7 +563,7 @@ class TfPoseEstimator:
         t = time.time()
         humans = PoseEstimator.estimate_paf(peaks, self.heatMat, self.pafMat)
         logger.debug('estimate time=%.5f' % (time.time() - t))
-        return humans, self.heatMat
+        return humans
 
 
 if __name__ == '__main__':

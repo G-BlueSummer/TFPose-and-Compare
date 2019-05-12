@@ -47,14 +47,14 @@ if __name__ == '__main__':
             break
 
         # 识别骨骼
-        humans, heatMat = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+        humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
             
         logger.debug(humans)
 
         if not args.showBG:
             image = np.zeros(image.shape)
         # 绘制骨骼
-        image = TfPoseEstimator.draw_humans(image, humans, heatMat, imgcopy=False)
+        image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
         # 输出FPS
         cv2.putText(image,

@@ -7,11 +7,9 @@ from tf_pose.networks import get_graph_path, model_wh
 
 class DataSet():
     def __init__(self):
-        self.max_frames = 300
+        self.max_frames = 8
         self.resize = '432x368'
         self.model = 'cmu'
-        self.classes = self.get_classes()
-        self.data = self.get_data()
         self.estimator = self.load_tf_pose()
 
     #加载骨架识别的模型
@@ -19,44 +17,58 @@ class DataSet():
         w, h = model_wh(self.resize)
         return TfPoseEstimator(get_graph_path(self.model), target_size=(w, h))
 
+    #生成一个视频文件的特征
+    def extract_video_features(self, video_input_file_path, feature_output_file_path=None):
+        video = cv2.VideoCapture(video_input_file_path)
+        features= []
+        while video.isOpened():
+            ret_val, image = video.read()
+            # 视频读取结束
+            if not ret_val:
+                break
+
+            feature = TfPoseEstimator.trans_data(self.estimator.inference(image, upsample_size=5.0))
+            features.append(feature)
+        unscaled_features = np.array(features)
+        if feature_output_file_path:
+            np.save(feature_output_file_path, unscaled_features)    #保存到文件
+        return unscaled_features
 
     #生成每一帧的特征
-    def frame_generator(self):
-        #每个data是个视频文件名与对应的类别
-        for name, cla in self.data:
-            video = cv2.VideoCapture(name)
-            while video.isOpened():
-                ret_val, image = video.read()
-                # 视频读取结束
-                if not ret_val:
-                    break
+    # def frame_generator(self):
+    #     #每个data是个视频文件名与对应的类别
+    #     for name, label in self.data:
+    #         video = cv2.VideoCapture(name)
+    #         while video.isOpened():
+    #             ret_val, image = video.read()
+    #             # 视频读取结束
+    #             if not ret_val:
+    #                 break
 
-                _, X  = self.estimator.inference(image, upsample_size=4.0)
-                y = cla
+    #             X  = TfPoseEstimator.trans_data(self.estimator.inference(image, upsample_size=5.0))
 
-                yield np.array(X), np.array(y)
-            
-    #生成类别
-    def get_classes(self):
-        classes = []
-        # 类别名按目录放置
-        for dir in os.listdir('video'):
-            classes.append(dir)
+    #             yield X, label
 
-        return classes
+    #生成数据集
+    def dataset_generator(self, save_data=True):
+        X_samples = []
+        y_samples = []
 
-    #生成视频和与之对应的标签
-    def get_data(self):
-        data = []
+        output_feature_file_path = None
+        
+        for c in os.listdir('video'):
+            for file in os.listdir(join('video', c)):
+                video_path = join('video', c, file)
+                if save_data:
+                    output_feature_file_path = join('features' ,file.split('.')[-2] + '.npy')
+                X = self.extract_video_features(video_path, output_feature_file_path)
+                y = c
+                X_samples.append(X)
+                y_samples.append(y)
 
-        for dir in self.classes:
-            for video in os.listdir(join('video', dir)):
-                data.append((join('video', dir, video), dir))
+        return X_samples, y_samples
 
-        return data
 
 if __name__ == '__main__':
     data = DataSet()
-    frame = data.frame_generator()
-    while True:
-        print(next(frame))
+    data.dataset_generator()
