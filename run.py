@@ -8,7 +8,7 @@ import numpy as np
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
 
-logger = logging.getLogger('TfPoseEstimator-WebCam')
+logger = logging.getLogger('TfPoseEstimatorVideo')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
@@ -47,14 +47,14 @@ if __name__ == '__main__':
             break
 
         # 识别骨骼
-        humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+        humans, heatMat = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
             
         logger.debug(humans)
 
         if not args.showBG:
             image = np.zeros(image.shape)
         # 绘制骨骼
-        image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+        image = TfPoseEstimator.draw_humans(image, humans, heatMat, imgcopy=False)
 
         # 输出FPS
         cv2.putText(image,

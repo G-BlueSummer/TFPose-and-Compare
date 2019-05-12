@@ -119,7 +119,7 @@ src/pafprocess/pafprocess.py
 src/pafprocess/pafprocess_wrap.cpp
 src/pafprocess/pafprocess_wrap.cxx
 
-lstm/video
+video
 lstm/logs
 
 #vscode

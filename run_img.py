@@ -8,7 +8,7 @@ import numpy as np
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
 
-logger = logging.getLogger('TfPoseEstimatorRun')
+logger = logging.getLogger('TfPoseEstimatorImg')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
@@ -20,7 +20,7 @@ logger.addHandler(ch)
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation run')
     parser.add_argument('--image', type=str, default='./images/p1.jpg')
-    parser.add_argument('--model', type=str, default='cmu',
+    parser.add_argument('--model', type=str, default='mobilenet_thin',
                         help='cmu / mobilenet_thin / mobilenet_v2_large / mobilenet_v2_small')
     parser.add_argument('--resize', type=str, default='432x368',
                         help='if provided, resize images before they are processed. '
@@ -40,12 +40,12 @@ if __name__ == '__main__':
         sys.exit(-1)
 
     t = time.time()
-    humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+    humans, heatMap = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
     elapsed = time.time() - t
 
     logger.info('inference image: %s in %.4f seconds.' % (args.image, elapsed))
 
-    image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+    image = TfPoseEstimator.draw_humans(image, humans, heatMap, imgcopy=False)
 
     cv2.imshow('result', image)
     cv2.waitKey(0)
