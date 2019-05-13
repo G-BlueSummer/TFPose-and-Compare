@@ -5,10 +5,10 @@ from keras.optimizers import SGD
 
 
 class LSTM_Model():
-    def __init__(self, seq_length, features_length, n_classes=5):
-        self.model = self.lstm()
+    def __init__(self, seq_length, features_length, n_classes):
         self.input_shape = (seq_length, features_length)    #输入的特征形状
         self.n_classes = n_classes                          #分类的类别数
+        self.model = self.lstm()
 
         metrics = ['accuracy']
         if self.n_classes >= 10:
@@ -22,9 +22,7 @@ class LSTM_Model():
 
     def lstm(self):
         model = Sequential()
-        model.add(
-            LSTM(2048, return_sreturn_sequences=False,
-            input_shape=self.input_shape))
+        model.add(LSTM(2048, input_shape=self.input_shape))
         model.add(Dropout(0.5))
         model.add(Dense(512, activation='relu'))
         model.add(Dropout(0.5))
