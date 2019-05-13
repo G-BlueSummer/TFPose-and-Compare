@@ -1,4 +1,4 @@
-from keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.callbacks import ModelCheckpoint, EarlyStopping, CSVLogger
 from sklearn.model_selection import train_test_split
 from os.path import join
 from model import LSTM_Model
@@ -11,13 +11,13 @@ def train_model(train_data,train_labels,validation_data,validation_labels, nb_cl
     nb_epoch = 500
 
     callback = [
-        EarlyStopping(monitor='val_loss', patience=10, verbose=0),
+        EarlyStopping(patience=5),
         ModelCheckpoint(
             filepath='LSTM.h5',
-            monitor='val_loss',
-            verbose=0,
+            verbose=1,
             save_best_only=True
-            )
+            ),
+        CSVLogger(join('logs', 'LSTM.log'))
         ]
 
     lstm = LSTM_Model(train_data.shape[1], train_data.shape[2], nb_classes)
@@ -36,15 +36,11 @@ def train_model(train_data,train_labels,validation_data,validation_labels, nb_cl
     return lstm.model
     
 def main():
-    # data = DataSet()  #载入数据
-    X_samples = np.load(join('features', 'X_samples.npy'))
-    y_samples = np.load(join('features', 'y_samples.npy'))
-    X_train, X_validate, y_train, y_validate = train_test_split(X_samples, y_samples)
-
-    print(y_validate)
+    X_samples, y_samples = DataSet.load_data()      #载入数据
+    X_train, X_validate, y_train, y_validate = train_test_split(X_samples, y_samples, test_size=0.2, random_state=0)
 
     nb_classes = y_samples.shape[1]
-    # train_model(X_train, X_validate, y_train, y_validate, nb_classes)
+    train_model(X_train, X_validate, y_train, y_validate, nb_classes)
 
 
 if __name__ == '__main__':

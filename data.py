@@ -10,7 +10,7 @@ class DataSet():
     def __init__(self):
         self.max_frames = 8
         self.resize = '432x368'
-        self.model = 'mobilenet_thin'
+        self.model = 'cmu'
         self.estimator = self.load_tf_pose()
 
     #加载骨架识别的模型
@@ -85,6 +85,13 @@ class DataSet():
         y_samples = np.array(y_samples)
 
         return X_samples, y_samples
+
+    @staticmethod
+    def load_data():
+        X_samples = np.load(join('features', 'X_samples.npy'))
+        y_samples = np.load(join('features', 'y_samples.npy'))
+        return X_samples, y_samples
+
 
 
 if __name__ == '__main__':
