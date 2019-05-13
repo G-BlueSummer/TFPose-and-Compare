@@ -13,7 +13,7 @@ def train_model(train_data,train_labels,validation_data,validation_labels, nb_cl
     callback = [
         EarlyStopping(patience=5),
         ModelCheckpoint(
-            filepath='LSTM.h5',
+            filepath=join('models', 'LSTM.h5'),
             verbose=1,
             save_best_only=True
             ),
@@ -28,7 +28,6 @@ def train_model(train_data,train_labels,validation_data,validation_labels, nb_cl
             validation_data=(validation_data, validation_labels),
             batch_size=batch_size,
             nb_epoch=nb_epoch,
-            epochs=nb_epoch,
             verbose=1,
             callbacks=callback
             )
@@ -40,7 +39,7 @@ def main():
     X_train, X_validate, y_train, y_validate = train_test_split(X_samples, y_samples, test_size=0.2, random_state=0)
 
     nb_classes = y_samples.shape[1]
-    train_model(X_train, X_validate, y_train, y_validate, nb_classes)
+    train_model(X_train, y_train, X_validate, y_validate, nb_classes)
 
 
 if __name__ == '__main__':

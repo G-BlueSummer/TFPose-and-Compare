@@ -92,8 +92,6 @@ class DataSet():
         y_samples = np.load(join('features', 'y_samples.npy'))
         return X_samples, y_samples
 
-
-
 if __name__ == '__main__':
     data = DataSet()
     data.dataset_generator()

@@ -107,6 +107,7 @@ timeline*.json
 
 # project customs 
 tmp
+models/LSTM.h5
 models/graph/cmu*/*.pb
 models/trained/*/checkpoint
 models/trained/*/*.pb
@@ -120,7 +121,6 @@ src/pafprocess/pafprocess_wrap.cpp
 src/pafprocess/pafprocess_wrap.cxx
 
 video
-lstm/logs
 
 #vscode
 .vscode
