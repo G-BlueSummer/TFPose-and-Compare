@@ -1,7 +1,7 @@
 from keras.layers import Dense, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
-from keras.optimizers import SGD
+from keras.optimizers import Adam
 
 
 class LSTM_Model():
@@ -14,7 +14,7 @@ class LSTM_Model():
         if self.n_classes >= 10:
             metrics.append('top_k_categorical_accuracy')
 
-        optimizer = SGD(lr=0.00005, decay = 1e-6, momentum=0.9, nesterov=True)
+        optimizer = Adam(lr=1e-5, decay=1e-6)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer,
                            metrics=metrics)
 
@@ -22,7 +22,7 @@ class LSTM_Model():
 
     def lstm(self):
         model = Sequential()
-        model.add(LSTM(2048, input_shape=self.input_shape, dropout=0.5))
+        model.add(LSTM(1024, input_shape=self.input_shape, dropout=0.5))
         model.add(Dense(512, activation='relu'))
         model.add(Dropout(0.5))
         model.add(Dense(self.n_classes, activation='softmax'))

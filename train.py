@@ -8,16 +8,16 @@ import numpy as np
 
 def train_model(train_data,train_labels,validation_data,validation_labels, nb_classes):
     batch_size = 128
-    nb_epoch = 500
-
+    nb_epoch = 1000
+    timestamp = time.time()
     callback = [
-        EarlyStopping(patience=5),
+        EarlyStopping(patience=10),
         ModelCheckpoint(
-            filepath=join('models', 'LSTM.h5'),
+            filepath=join('models', 'LSTM-{}.hdf5'.format(timestamp)),
             verbose=1,
             save_best_only=True
             ),
-        CSVLogger(join('logs', 'LSTM.log'))
+        CSVLogger(join('logs', 'LSTM-{}.log'.format(timestamp)))    #记录训练情况，用时间命名
         ]
 
     lstm = LSTM_Model(train_data.shape[1], train_data.shape[2], nb_classes)
@@ -27,7 +27,7 @@ def train_model(train_data,train_labels,validation_data,validation_labels, nb_cl
             train_labels,
             validation_data=(validation_data, validation_labels),
             batch_size=batch_size,
-            nb_epoch=nb_epoch,
+            epochs=nb_epoch,
             verbose=1,
             callbacks=callback
             )

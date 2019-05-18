@@ -50,7 +50,7 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
+logs/*
 *.log
 local_settings.py
 
@@ -107,7 +107,7 @@ timeline*.json
 
 # project customs 
 tmp
-models/LSTM.h5
+models/*.hdf5
 models/graph/cmu*/*.pb
 models/trained/*/checkpoint
 models/trained/*/*.pb
