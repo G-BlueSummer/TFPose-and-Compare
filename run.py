@@ -8,6 +8,8 @@ import numpy as np
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
 
+from keras.models import load_model
+
 logger = logging.getLogger('TfPoseEstimatorVideo')
 logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler()
@@ -39,6 +41,8 @@ if __name__ == '__main__':
 
     # 捕捉视频
     video = cv2.VideoCapture(args.video)
+    lstm = load_model('models\\LSTM-1558192021.371915.hdf5')
+    X = []      #保存特征，进行分类
 
     while video.isOpened():
         ret_val, image = video.read()
@@ -46,10 +50,16 @@ if __name__ == '__main__':
         if not ret_val:
             break
 
+        if len(X) >= 8:
+            print(lstm.predict(np.array([X])))
+            X = []
+
         # 识别骨骼
         humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+        if (len(humans) > 0):
+            X.append(TfPoseEstimator.trans_data(humans)[0])
             
-        logger.debug(humans)
+        # logger.debug(humans)
 
         if not args.showBG:
             image = np.zeros(image.shape)

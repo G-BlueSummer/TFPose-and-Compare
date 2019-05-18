@@ -1,7 +1,7 @@
 from keras.layers import Dense, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
-from keras.optimizers import Adam
+from keras.optimizers import Adam, SGD
 
 
 class LSTM_Model():
@@ -22,11 +22,8 @@ class LSTM_Model():
 
     def lstm(self):
         model = Sequential()
-        model.add(LSTM(1024, input_shape=self.input_shape, dropout=0.5))
-        model.add(Dense(512, activation='relu'))
-        model.add(Dropout(0.5))
+        model.add(LSTM(1024, input_shape=self.input_shape))
+        model.add(Dense(512))
         model.add(Dense(self.n_classes, activation='softmax'))
 
         return model
-
-    

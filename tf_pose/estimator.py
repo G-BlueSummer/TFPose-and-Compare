@@ -398,7 +398,7 @@ class TfPoseEstimator:
             n_human = []
             for i in range(common.CocoPart.Background.value):
                 if i not in human.body_parts.keys():
-                    n_human.extend([0, 0, 0])
+                    n_human.extend([-1, -1, -1])
                 else:
                     n_human.extend(human.body_parts[i].to_array()) 
             n_humans.append(n_human)

@@ -31,8 +31,10 @@ class DataSet():
             if not ret_val:
                 break
 
-            feature = TfPoseEstimator.trans_data(self.estimator.inference(image, upsample_size=5.0))[0]     #只提取第一个人
-            features.append(feature)
+            feature = TfPoseEstimator.trans_data(self.estimator.inference(image, upsample_size=5.0))     #只提取第一个人
+            if(len(feature) > 1):
+                continue
+            features.append(feature[0])
         features = np.array(features)
         logging.info("Features shape: {}".format(features.shape))
         return features
