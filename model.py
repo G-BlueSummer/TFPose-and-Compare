@@ -23,7 +23,7 @@ class LSTM_Model():
     def lstm(self):
         model = Sequential()
         model.add(LSTM(1024, input_shape=self.input_shape))
-        model.add(Dense(512))
+        model.add(Dense(256, activation='relu'))
         model.add(Dense(self.n_classes, activation='softmax'))
 
         return model

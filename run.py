@@ -3,6 +3,7 @@ import logging
 import time
 
 import cv2
+import os
 import numpy as np
 
 from tf_pose.estimator import TfPoseEstimator
@@ -41,7 +42,7 @@ if __name__ == '__main__':
 
     # 捕捉视频
     video = cv2.VideoCapture(args.video)
-    lstm = load_model('models\\LSTM-1558192021.371915.hdf5')
+    lstm = load_model(os.path.join('models', 'LSTM-1558427801.965863.hdf5'))
     X = []      #保存特征，进行分类
 
     while video.isOpened():
@@ -51,7 +52,7 @@ if __name__ == '__main__':
             break
 
         if len(X) >= 8:
-            print(lstm.predict(np.array([X])))
+            print(lstm.predict(np.array([X]))[0])
             X = []
 
         # 识别骨骼
