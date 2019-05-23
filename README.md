@@ -1,4 +1,5 @@
-# tf-pose-estimation
+本项目基于[tf-pose-estimation](https://github.com/ildoonet/tf-pose-estimation)并加入了LSTM，可对人体动作进行简单的识别
+# TFPose
 
 'Openpose', human pose estimation algorithm, have been implemented using Tensorflow. It also provides several variants that have some changes to the network structure for **real-time processing on the CPU or low-power embedded devices.**
 
@@ -22,6 +23,7 @@ Implemented features are listed here : [features](./etcs/feature.md)
 
 - python3
 - tensorflow 1.4.1+
+- keras2
 - opencv3, protobuf, python3-tk
 - slidingwindow
   - https://github.com/adamrehn/slidingwindow
@@ -77,25 +79,16 @@ $ bash download.sh
 
 ### Test Inference
 
-You can test the inference feature with a single image.
+使用单张图片进行测试
 
 ```
 $ python run_img.py --model=mobilenet_thin --resize=432x368 --image=./images/p1.jpg
 ```
 
-The image flag MUST be relative to the src folder with no "~", i.e:
-```
---image ../../Desktop
-```
-
-Then you will see the screen as below with pafmap, heatmap, result and etc.
-
-![inferent_result](./etcs/inference_result2.png)
-
 ### Realtime Webcam
 
 ```
-$ python run.py --model=mobilenet_thin --resize=432x368 --camera=0
+$ python run.py --model=mobilenet_thin --resize=432x368 
 ```
 
 Then you will see the realtime webcam screen with estimated poses as below. This [Realtime Result](./etcs/openpose_macbook13_mobilenet2.gif) was recored on macbook pro 13" with 3.1Ghz Dual-Core CPU.

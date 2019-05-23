@@ -35,7 +35,6 @@ def train_model(train_data,train_labels,validation_data,validation_labels, nb_cl
     return lstm.model
     
 def main():
-    np.random.seed(0)
 
     X_samples, y_samples = DataSet.load_data()      #载入数据
     X_train, X_validate, y_train, y_validate = train_test_split(X_samples, y_samples, test_size=0.2)
