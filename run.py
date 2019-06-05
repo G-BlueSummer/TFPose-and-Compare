@@ -1,7 +1,7 @@
 import argparse
 import logging
 import time
-
+import angle
 import cv2
 import os
 import numpy as np
@@ -9,7 +9,6 @@ import numpy as np
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
 
-from keras.models import load_model
 
 logger = logging.getLogger('TfPoseEstimatorVideo')
 logger.setLevel(logging.DEBUG)
@@ -20,7 +19,6 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 fps_time = 0
-
 
 if __name__ == '__main__':
     # 参数分析
@@ -42,8 +40,6 @@ if __name__ == '__main__':
 
     # 捕捉视频
     video = cv2.VideoCapture(args.video)
-    lstm = load_model(os.path.join('models', 'LSTM-1558432363.9369454.hdf5'))
-    X = []      #保存特征，进行分类
 
     while video.isOpened():
         ret_val, image = video.read()
@@ -51,16 +47,11 @@ if __name__ == '__main__':
         if not ret_val:
             break
 
-        if len(X) >= 8:
-            print(lstm.predict(np.array([X]))[0])
-            X = []
-
         # 识别骨骼
         humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
-        if (len(humans) > 0):
-            X.append(TfPoseEstimator.trans_data(humans)[0])
             
         # logger.debug(humans)
+        print(angle.CalAngle(humans[0]))
 
         if not args.showBG:
             image = np.zeros(image.shape)
