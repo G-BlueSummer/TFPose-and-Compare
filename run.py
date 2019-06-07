@@ -9,6 +9,7 @@ import numpy as np
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path, model_wh
 
+from os.path import join
 
 logger = logging.getLogger('TfPoseEstimatorVideo')
 logger.setLevel(logging.DEBUG)
@@ -40,34 +41,52 @@ if __name__ == '__main__':
 
     # 捕捉视频
     video = cv2.VideoCapture(args.video)
+    # 样本视频
+    demo = cv2.VideoCapture(join('video', 'demo.mp4'))
+    # 保存视频
+    # fps = video.get(cv2.CAP_PROP_FPS)     #视频帧率
+    # fourcc = cv2.VideoWriter_fourcc(*'XVID')  
+    # frame_size = (int(video.get(cv2.CAP_PROP_FRAME_WIDTH)),int(video.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    # videoWriter = cv2.VideoWriter('demo.mp4', fourcc, fps, frame_size)
 
-    while video.isOpened():
-        ret_val, image = video.read()
-        # 视频读取结束
-        if not ret_val:
-            break
+    # 读取视频
+    ret_val1, image1 = video.read()
+    ret_val2, image2 = demo.read()
+
+    #视频读取完后退出
+    while ret_val1 and ret_val2:
 
         # 识别骨骼
-        humans = e.inference(image, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
+        humans = e.inference(image1, resize_to_default=(w > 0 and h > 0), upsample_size=args.resize_out_ratio)
             
         # logger.debug(humans)
-        print(angle.CalAngle(humans[0]))
+        if len(humans) > 0:
+            print(angle.CalAngle(humans[-1]))
 
         if not args.showBG:
-            image = np.zeros(image.shape)
+            image1 = np.zeros(image1.shape)
         # 绘制骨骼
-        image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+        image1 = TfPoseEstimator.draw_humans(image1, humans, imgcopy=False)
+        # 保存视频
+        # videoWriter.write(image)
 
         # 输出FPS
-        cv2.putText(image,
+        cv2.putText(image1,
                     "FPS: %f" % (1.0 / (time.time() - fps_time)),
                     (10, 10),  cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     (0, 255, 0), 2)
+        # 显示实时视频与样本视频
+        image = np.hstack((image1, image2))
+
         cv2.imshow('Human motion', image)
         fps_time = time.time()
         # 按下ESC时退出
         if cv2.waitKey(1) == 27:
             break
+
+        # 读取视频
+        ret_val1, image1 = video.read()
+        ret_val2, image2 = demo.read()
 
     cv2.destroyAllWindows()
 

@@ -43,13 +43,9 @@ class DataSet():
         for video_path in os.listdir('video'):
             X = self.extract_video_features(join('video', video_path))
 
-            #保存到文件方便下次存取
-            np.save(join('features', video_path + '.npy'), np.array(X))
+            #保存到CSV
+            np.savetxt(join('features', video_path + '.csv'), np.array(X), delimiter=',')
 
-    @staticmethod
-    def load_data():
-        X_samples = np.load(join('features', 'X_samples.npy'))
-        return X_samples
 
 if __name__ == '__main__':
     data = DataSet()
