@@ -44,7 +44,7 @@ class DataSet():
             X = self.extract_video_features(join('video', video_path))
 
             #保存到CSV
-            np.savetxt(join('features', video_path + '.csv'), np.array(X), delimiter=',')
+            np.savetxt(join('features', video_path + '.tsv'), np.array(X), delimiter='\t', fmt='%4f')
 
 
 if __name__ == '__main__':
