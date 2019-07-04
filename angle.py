@@ -38,5 +38,5 @@ def CalAngle(human):
         #夹角
         angles[i] = (v1x * v2x + v1y * v2y) / (np.sqrt(v1x * v1x + v1y * v1y) * np.sqrt(v2x * v2x + v2y * v2y))
 
-    return angles
+    return np.arccos(angles)
 

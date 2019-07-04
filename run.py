@@ -46,11 +46,6 @@ if __name__ == '__main__':
     demo = cv2.VideoCapture(join('video', 'demo.mp4'))
     # 样本数据
     stdAngle = np.loadtxt(join('features', 'demo.tsv'), delimiter='\t')
-    # 保存视频
-    # fps = video.get(cv2.CAP_PROP_FPS)     #视频帧率
-    # fourcc = cv2.VideoWriter_fourcc(*'XVID')  
-    # frame_size = (int(video.get(cv2.CAP_PROP_FRAME_WIDTH)),int(video.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-    # videoWriter = cv2.VideoWriter('demo.mp4', fourcc, fps, frame_size)
 
     # 读取视频
     ret_val1, image1 = video.read()
@@ -71,15 +66,15 @@ if __name__ == '__main__':
             if np.isnan(realAngle).any():
                 print('数据缺失')
             else:
-                print('准确度:', r2_score(stdAngle[pos], realAngle))
+                i = np.abs(realAngle - stdAngle[pos]) < 0.15        # 设置允许误差
+                realAngle[i] = stdAngle[pos][i]
+                print('准确度:', np.sqrt(r2_score(stdAngle[pos], realAngle)))
             
 
         if not args.showBG:
             image1 = np.zeros(image1.shape)
         # 绘制骨骼
         image1 = TfPoseEstimator.draw_humans(image1, humans, imgcopy=False)
-        # 保存视频
-        # videoWriter.write(image)
 
         # 输出FPS
         cv2.putText(image1,
@@ -88,6 +83,11 @@ if __name__ == '__main__':
                     (0, 255, 0), 2)
         # 显示实时视频与样本视频
         image = np.hstack((image1, image2))
+        # 缩放
+        width = int(image.shape[1])
+        height = int(image.shape[0])
+        dim = (1200, int(height / width * 1200))
+        image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
 
         cv2.imshow('Human motion', image)
         fps_time = time.time()

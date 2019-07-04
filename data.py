@@ -30,8 +30,11 @@ class DataSet():
             if not ret_val:
                 break
 
-            feature = self.estimator.inference(image, upsample_size=5.0)[-1]     #只提取第一个人
-            features.append(CalAngle(feature))
+            
+            feature = self.estimator.inference(image, upsample_size=5.0)
+            if len(feature) < 1:    # 没提取到人
+                continue
+            features.append(CalAngle(feature[0]))      # 只要第一个人
 
         features = np.array(features)
         print(features)
@@ -49,4 +52,7 @@ class DataSet():
 
 if __name__ == '__main__':
     data = DataSet()
-    data.dataset_generator()
+    # data.dataset_generator()
+    X = data.extract_video_features(join('video', 'demo.mp4'))
+    #保存到CSV
+    np.savetxt(join('features', 'demo' + '.csv'), np.array(X), delimiter=',', fmt='%4f')
